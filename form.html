@@ -1,0 +1,145 @@
+<html>
+<!--
+Author: https://github.com/guilhermepachecod
+Copyright https://github.com/guilhermepachecod
+01 31 2019
+
+Function: 		People information management
+
+Description:	Simple record of some personal data;
+				It come with some data recorded for demonstration;
+				Can record, edit, delete  and navigation for all records.
+
+				Using Html, PHP, Jquery, JSon and Mysql.
+-->
+<head>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script language="JavaScript" src="functions.js"></script>
+	<script language="JavaScript" src="form.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--
+funtion onload()
+	This function load on page load
+	Getting the id form from URL string to call a specific personal record, if it have.
+	After that calling the showonerecort and than disable the form control and button save.
+
+-->	
+	<script>
+		function onload(){
+				//MYCONN.events.showAllRecord('names.php');
+				var urlID = location.search.substring(1).split("&")[0];
+				MYCONN.events.showOneRecord(urlID);
+				$("#frmcontrol input").prop("disabled", true);
+				$("#btnsave").prop("disabled", true);
+			}
+	
+	</script>
+	<meta charset="utf-8" />
+	<title>Jquery, Json Registration</title>
+	<link rel="stylesheet" type="text/css" href="form.css"/>
+</head> 
+<body onload="onload();"> 
+<div id="frmcontrol" class="container">
+            <form class="form-horizontal" role="form">
+                <h2>Registration</h2>
+                <div class="buttoncontainer">
+                <button id="btnp" type="button" class="btn btn-primary" onclick="MYCONN.events.showPrevNextRecord('prev');"><<<</button>
+                <button id="btnsort" type="button" class="btn btn-primary" onclick="MYCONN.events.showOneRecord();">Sort</button>
+                <button id="btnn" type="button" class="btn btn-primary" onclick="MYCONN.events.showPrevNextRecord('next');">>>></button>
+                
+                <button id="btnnew" type="button" class="btn btn-primary" onclick="MYFORM.events.enableNew();">New</button>
+                <button id="btnsave" type="button" class="btn btn-primary" onclick="MYCONN.events.saveNewRecord();">Save</button>
+                <button id="btnedit" type="button" class="btn btn-primary" onclick="MYFORM.events.enableEdit();">Edit</button>
+				</div>
+				<div class="form-row">
+				<div class="col-md-4 mb-3">
+				  <label for="numberid" class="control-label">ID</label>
+				  <h4 id="numberid" placeholder="Number ID"></h4>
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="email" class="control-label">Email* </label>
+				  <input type="email" id="email" placeholder="Email" class="form-control " name= "email" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="validationServerUsername">Username*</label>
+				  <div class="input-group">
+					<div class="input-group-prepend">
+					  <span class="input-group-text " id="inputGroupPrepend3">@</span>
+					</div>
+					<input type="text" class="form-control" id="validationServerUsername" placeholder="Username" aria-describedby="inputGroupPrepend3" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);" required>
+					<div class="invalid-feedback">
+					  Please choose a username.
+					</div>
+				  </div>
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="firstName" class="control-label">First Name</label>
+				  <input type="text" id="firstName" placeholder="First Name" class="form-control" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);" autofocus>
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="lastName" class="control-label">Last Name</label>
+				  <input type="text" id="lastName" placeholder="Last Name" class="form-control" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="phoneNumber" class="control-label">Phone number* </label>
+                        <input type="phoneNumber" id="phoneNumber" placeholder="Phone number" class="form-control" onkeyup="MYFORM.events.validadeFields(this);"  onkeypress="MYFORM.events.putMask(this);" onfocusout="MYFORM.events.validadeFields(this);"  maxlength="16">
+                        <span class="small">Your phone number won't be disclosed anywhere </span>
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label class="control-label col-sm-3">Gender</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label class="radio-inline">
+                                    <input type="radio" id="femaleRadio" name="gender" value="female">Female
+                                </label>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="radio-inline">
+                                    <input type="radio" id="maleRadio" name="gender" value="male">Male
+                                </label>
+                            </div>
+
+                    </div>
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="birthDate" class="control-label">Date of Birth*</label>
+				  <input type="date" id="birthDate" class="form-control">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+					
+				  <label for="password" class="control-label">Zipcode</label>
+				  <input type="text" id="zipcode" placeholder="Zipcode" class="form-control" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);" onkeypress="MYFORM.events.putMask(this);" maxlength="15">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+				  <label for="state" class="control-label">State</label>
+				  <input type="text" id="state" placeholder="State" class="form-control" maxlength="2" onkeyup="MYFORM.events.validadeFields(this);" onfocusout="MYFORM.events.validadeFields(this);">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+					<label for="city" class="control-label">City</label>
+				  <input type="text" id="city" placeholder="City" class="form-control">
+				  
+				</div>
+				<div class="col-md-4 mb-3">
+					
+				  <label for="lastName" class="control-label">Street Address</label>
+				  <input type="text" id="streetaddress" placeholder="Street Address" class="form-control" >
+				  
+				</div>
+			  </div>
+  
+
+                
+            </form> <!-- /form -->
+        </div> <!-- ./container -->
+</body>
+</html>
